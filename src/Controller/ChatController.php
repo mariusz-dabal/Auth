@@ -15,4 +15,12 @@ class ChatController extends AbstractController
             'controller_name' => 'ChatController',
         ]);
     }
+
+    #[Route('/api/test', name: 'api_chat')]
+    public function apiTest(): Response
+    {
+        return $this->json([
+            'data' => 'elo my friend'
+                           ]);
+    }
 }
