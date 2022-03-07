@@ -4,4 +4,11 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import './styles/app.css';
 import App from './components/App';
 
-ReactDOM.render(<Router><App /></Router>, document.getElementById('root'));
+ReactDOM.render(
+  <React.StrictMode>
+    <Router>
+      <App />
+    </Router>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
