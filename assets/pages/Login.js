@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useAuth } from '../utils/use-auth';
 
 function Copyright(props) {
   return (
@@ -19,7 +20,6 @@ function Copyright(props) {
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
         {process.env.REACT_APP_API_URL}
-        {console.log(process.env)}
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -30,6 +30,9 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
+
+  const auth = useAuth();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -38,7 +41,10 @@ export default function SignIn() {
       email: data.get('email'),
       password: data.get('password'),
     });
-    console.log(process.env.REACT_APP_API_URL)
+    auth.signin(
+      data.get('email'),
+      data.get('password')
+    );
   };
 
   return (
