@@ -147,7 +147,9 @@ export default function Layout() {
                 onClose={handleCloseUserMenu}
               >
                 <MenuItem onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">Profile</Typography>
+                  <Link to="/profile" className="link">
+                    <Typography textAlign="center">Profile</Typography>
+                  </Link>
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>
                   <Typography textAlign="center">Logout</Typography>
