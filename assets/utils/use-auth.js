@@ -7,11 +7,7 @@ const authContext = createContext();
 // ... available to any child component that calls useAuth().
 export function ProvideAuth({ children }) {
   const auth = useProvideAuth();
-  return (
-    <authContext.Provider value={auth}>
-      {children}
-    </authContext.Provider>
-  );
+  return <authContext.Provider value={auth}>{children}</authContext.Provider>;
 }
 
 // Hook for child components to get the auth object ...
@@ -27,87 +23,44 @@ function useProvideAuth() {
   // Wrap any methods we want to use making sure ...
   // ... to save the user to state.
   const signin = (email, password) => {
-    // return firebase
-    //   .auth()
-    //   .signInWithEmailAndPassword(email, password)
-    //   .then((response) => {
-    //     setUser(response.user);
-    //     return response.user;
-    //   });
-
-    return axios.post('/api/login_check', {
-      username: email,
-      password: password
-    })
-      .then(response => {
+    return axios
+      .post("/api/login_check", {
+        username: email,
+        password: password,
+      })
+      .then((response) => {
+        localStorage.setItem("token", JSON.stringify(response.data.token));
         setToken(response.data.token);
         return response.data.token;
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
-      })
+      });
   };
 
-  // const signup = (email, password) => {
-  //   return firebase
-  //     .auth()
-  //     .createUserWithEmailAndPassword(email, password)
-  //     .then((response) => {
-  //       setUser(response.user);
-  //       return response.user;
-  //     });
-  // };
-  //
-  // const signout = () => {
-  //   return firebase
-  //     .auth()
-  //     .signOut()
-  //     .then(() => {
-  //       setUser(false);
-  //     });
-  // };
-  //
-  // const sendPasswordResetEmail = (email) => {
-  //   return firebase
-  //     .auth()
-  //     .sendPasswordResetEmail(email)
-  //     .then(() => {
-  //       return true;
-  //     });
-  // };
-  //
-  // const confirmPasswordReset = (code, password) => {
-  //   return firebase
-  //     .auth()
-  //     .confirmPasswordReset(code, password)
-  //     .then(() => {
-  //       return true;
-  //     });
-  // };
+  const signout = () => {
+    setToken("");
+    localStorage.removeItem("token");
+  };
 
   // Subscribe to user on mount
   // Because this sets state in the callback it will cause any ...
   // ... component that utilizes this hook to re-render with the ...
   // ... latest auth object.
-  // useEffect(() => {
-  //   const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-  //     if (user) {
-  //       setUser(user);
-  //     } else {
-  //       setUser(false);
-  //     }
-  //   });
-  //
-  //   // Cleanup subscription on unmount
-  //   return () => unsubscribe();
-  // }, []);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      setToken(token);
+    } else {
+      setToken("");
+    }
+  }, []);
+
   // Return the user object and auth methods
   return {
     token,
     signin,
-    // signup,
-    // signout,
-    // sendPasswordResetEmail,
-    // confirmPasswordReset,
+    signout,
   };
 }
