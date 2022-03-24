@@ -10,22 +10,20 @@ import Container from "@mui/material/Container";
 
 export default function App() {
   return (
-    <Container maxWidth="md">
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route
-            path="profile"
-            element={
-              <PrivateRoute>
-                <Profile />
-              </PrivateRoute>
-            }
-          />
-          <Route path="login" element={<Login />} />
-          <Route path="*" element={<NotFound404 />} />
-        </Route>
-      </Routes>
-    </Container>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route
+          path="profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route path="login" element={<Login />} />
+        <Route path="*" element={<NotFound404 />} />
+      </Route>
+    </Routes>
   );
 }

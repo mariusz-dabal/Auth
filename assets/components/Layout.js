@@ -18,7 +18,7 @@ export default function Layout() {
   };
 
   return (
-    <Container disableGutters maxWidth={false}>
+    <Container disableGutters maxWidth="fluid">
       {auth.token && (
         <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static">
@@ -33,7 +33,7 @@ export default function Layout() {
                 <MenuIcon />
               </IconButton>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                News
+                Push-up Challenge
               </Typography>
               <Button onClick={handleLogout} color="inherit">
                 Logout
