@@ -20,15 +20,25 @@ class Challenge
     #[Assert\NotBlank]
     private $start_date;
 
-    #[ORM\Column(type: 'dateinterval')]
+    #[ORM\Column(type: 'integer')]
     private $duration;
 
     #[ORM\OneToMany(mappedBy: 'challenge', targetEntity: User::class)]
     private $participants;
 
+    #[ORM\OneToMany(mappedBy: 'challenge', targetEntity: Day::class)]
+    private $days;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $name;
+
+    #[ORM\Column(type: 'integer')]
+    private $reps;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
+        $this->days = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -48,12 +58,12 @@ class Challenge
         return $this;
     }
 
-    public function getDuration(): ?\DateInterval
+    public function getDuration(): ?int
     {
         return $this->duration;
     }
 
-    public function setDuration(\DateInterval $duration): self
+    public function setDuration(int $duration): self
     {
         $this->duration = $duration;
 
@@ -86,6 +96,60 @@ class Challenge
                 $participant->setChallenge(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Day>
+     */
+    public function getDays(): Collection
+    {
+        return $this->days;
+    }
+
+    public function addDay(Day $day): self
+    {
+        if (!$this->days->contains($day)) {
+            $this->days[] = $day;
+            $day->setChallenge($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDay(Day $day): self
+    {
+        if ($this->days->removeElement($day)) {
+            // set the owning side to null (unless already changed)
+            if ($day->getChallenge() === $this) {
+                $day->setChallenge(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getReps(): ?int
+    {
+        return $this->reps;
+    }
+
+    public function setReps(int $reps): self
+    {
+        $this->reps = $reps;
 
         return $this;
     }
