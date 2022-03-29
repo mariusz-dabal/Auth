@@ -38,6 +38,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'participant', targetEntity: Day::class)]
     private $days;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $name;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -164,6 +167,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $day->setParticipant(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }

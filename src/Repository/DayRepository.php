@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Day;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,6 +18,20 @@ class DayRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Day::class);
+    }
+
+    public function getDaysDoneByUser(User $user)
+    {
+        $builder = $this->createQueryBuilder('d')
+            ->select(
+                'd.reps'
+
+            )
+            ->andWhere('d.participant = :participantId')
+            ->setParameter('participantId', $user->getId())
+            ;
+
+        return $builder->getQuery()->getResult();
     }
 
     // /**
