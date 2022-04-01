@@ -52,6 +52,7 @@ function useProvideAuth() {
 
     if (token) {
       setToken(token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     } else {
       setToken("");
     }

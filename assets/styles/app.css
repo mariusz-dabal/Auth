@@ -17,3 +17,8 @@
     line-height: 1;
 }
 
+.progress {
+    transform: rotate(-90deg);
+    height: 2rem !important;
+}
+

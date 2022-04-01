@@ -28,8 +28,8 @@ class ChallengeController extends AbstractController
     #[Route('/api/challenges/{challenge}', methods: 'GET')]
     public function show(Challenge $challenge): Response
     {
-        $userIdentifier = $this->tokenStorage->getToken()->getUserIdentifier();
-        $user = $this->userRepository->findOneBy(['email' => $userIdentifier]);
+//        $userIdentifier = $this->tokenStorage->getToken()->getUserIdentifier();
+//        $user = $this->userRepository->findOneBy(['email' => $userIdentifier]);
 
         $now = new \DateTimeImmutable();
         $daysLeft = $challenge->getDuration() - ($now->diff($challenge->getStartDate()))->days;
