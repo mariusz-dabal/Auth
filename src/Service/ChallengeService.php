@@ -21,10 +21,9 @@ class ChallengeService
         /** @var Challenge*/
         $challenge = $this->challengeRepository->find($challengeId);
 
-        $today = new \DateTimeImmutable();
-        $startDate = $challenge->getStartDate();
-        $endDate = $startDate->add(new \DateInterval("P{$challenge->getDuration()}D"));
+        $today = (new \DateTimeImmutable())->setTime(0,0,0);
+        $startDate = $challenge->getStartDate()->setTime(0,0,0);
 
-        return ($endDate->diff($today))->days;
+        return ($today->diff($startDate))->days + 1;
     }
 }

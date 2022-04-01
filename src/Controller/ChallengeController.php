@@ -21,29 +21,31 @@ class ChallengeController extends AbstractController
 {
     public function __construct(
         private UserRepository $userRepository,
-        private TokenStorageInterface $tokenStorage,
+//        private TokenStorageInterface $tokenStorage,
         private EntityManagerInterface $entityManager,
+        private ChallengeService $challengeService
     ) {}
 
     #[Route('/api/challenges/{challenge}', methods: 'GET')]
     public function show(Challenge $challenge): Response
     {
-//        $userIdentifier = $this->tokenStorage->getToken()->getUserIdentifier();
-//        $user = $this->userRepository->findOneBy(['email' => $userIdentifier]);
-
-        $now = new \DateTimeImmutable();
-        $daysLeft = $challenge->getDuration() - ($now->diff($challenge->getStartDate()))->days;
+        $dayOfChallenge = $this->challengeService->getDayOfChallenge($challenge->getId());
 
         $participants = [];
 
-//        $days = $this->dayRepository->getDaysDoneByUser($user);
+        $today = new \DateTimeImmutable();
 
         foreach ($challenge->getParticipants() as $participant) {
             $daysDone = 0;
             $totalReps = 0;
+            $repsToday = 0;
             foreach ($participant->getDays() as $day) {
                 if ($day->getReps() === 100) {
                     $daysDone++;
+                }
+
+                if ($today->setTime(0,0,0) == $day->getCreatedAt()->setTime(0,0,0)) {
+                    $repsToday = $day->getReps();
                 }
 
                 $totalReps += $day->getReps();
@@ -53,16 +55,17 @@ class ChallengeController extends AbstractController
                 'name' => $participant->getname(),
                 'days_done' => $daysDone,
                 'reps_total' => $totalReps,
-                'reps_today' => 0
+                'reps_today' => $repsToday,
             ];
         }
 
         $challengeResponseObject = [
             'name' => $challenge->getName(),
             'duration' => $challenge->getDuration(),
-            'days_left' => $daysLeft,
+            'day' => $dayOfChallenge,
             'reps' => $challenge->getReps(),
-            'participants' => $participants
+            'participants' => $participants,
+            'time' => $today->format('Y-m-d\TH:i:sO'),
         ];
 
         return $this->json($challengeResponseObject);

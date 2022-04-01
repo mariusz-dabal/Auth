@@ -2,7 +2,10 @@
 
 namespace App\Command;
 
+use App\Entity\Day;
+use App\Repository\ChallengeRepository;
 use App\Service\ChallengeService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -17,7 +20,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class CreateDayCommand extends Command
 {
-    public function __construct(private ChallengeService $challengeService)
+    public function __construct(
+        private ChallengeService $challengeService,
+        private ChallengeRepository $challengeRepository,
+        private EntityManagerInterface $entityManager
+    )
     {
         parent::__construct();
     }
@@ -34,9 +41,21 @@ class CreateDayCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $io->title( $this->challengeService->getDayOfChallenge(3));
+        $challenges = $this->challengeRepository->findAll();
 
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        foreach ($challenges as $challenge) {
+            foreach ($challenge->getParticipants() as $participant) {
+                $day = new Day();
+                $day->setReps(0);
+                $day->setChallenge($challenge);
+                $day->setParticipant($participant);
+
+                $this->entityManager->persist($day);
+                $this->entityManager->flush();
+            }
+        }
+
+        $io->success('New day has begun! Pass --help to see your options.');
 
         return Command::SUCCESS;
     }

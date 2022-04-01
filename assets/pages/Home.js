@@ -9,7 +9,8 @@ import axios from "axios";
 
 export default function Home() {
   const auth = useAuth();
-  const [challenge, setChallenge] = useState({ participants: [] });
+  const [challenge, setChallenge] = useState({ day: [], participants: [] });
+  const [time, setTime] = useState(false);
 
   const getChallege = () => {
     axios
@@ -17,6 +18,12 @@ export default function Home() {
       .then((response) => {
         console.log(response.data);
         setChallenge(response.data);
+        const serverTime = new Date(response.data.time);
+        serverTime.setDate(serverTime.getDate() + 1);
+        serverTime.setHours(0);
+        serverTime.setMinutes(0);
+        serverTime.setSeconds(0);
+        setTime(serverTime);
       })
       .catch((error) => {
         console.log(error);
@@ -30,7 +37,7 @@ export default function Home() {
   return (
     <Grid container spacing={1}>
       <Grid item xs={12} md={3} order={{ xs: 2, md: 1 }}>
-        <DayCounter />
+        {challenge && <DayCounter day={challenge.day} />}
       </Grid>
 
       <Grid item xs={12} md={6} order={{ xs: 1, md: 2 }}>
@@ -46,7 +53,7 @@ export default function Home() {
       </Grid>
 
       <Grid item xs={12} md={3} order={{ xs: 3, md: 3 }}>
-        <Timer />
+        {time && <Timer expiryTimestamp={time} />}
       </Grid>
     </Grid>
   );
