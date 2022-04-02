@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\Day;
 use App\Repository\ChallengeRepository;
+use App\Repository\DayRepository;
 use App\Service\ChallengeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -23,7 +24,8 @@ class CreateDayCommand extends Command
     public function __construct(
         private ChallengeService $challengeService,
         private ChallengeRepository $challengeRepository,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private DayRepository $dayRepository
     )
     {
         parent::__construct();
@@ -45,6 +47,13 @@ class CreateDayCommand extends Command
 
         foreach ($challenges as $challenge) {
             foreach ($challenge->getParticipants() as $participant) {
+                /** @var Day $currentDay */
+                $currentDay = $this->dayRepository->findActiveDay($participant);
+                if (null !== $currentDay) {
+                    $currentDay->setActive(false);
+                    $this->entityManager->persist($currentDay);
+                }
+
                 $day = new Day();
                 $day->setReps(0);
                 $day->setChallenge($challenge);

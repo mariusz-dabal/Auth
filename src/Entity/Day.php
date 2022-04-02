@@ -25,9 +25,13 @@ class Day
     #[ORM\Column(type: 'integer')]
     private $reps;
 
+    #[ORM\Column(type: 'boolean')]
+    private $active;
+
     public function __construct()
     {
         $this->setCreatedAt(new \DateTimeImmutable());
+        $this->setActive(true);
     }
 
     public function getId(): ?int
@@ -79,6 +83,18 @@ class Day
     public function setReps(int $reps): self
     {
         $this->reps = $reps;
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
 
         return $this;
     }

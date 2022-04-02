@@ -34,6 +34,18 @@ class DayRepository extends ServiceEntityRepository
         return $builder->getQuery()->getResult();
     }
 
+    public function findActiveDay(User $user)
+    {
+        $builder = $this->createQueryBuilder('d')
+            ->andWhere('d.participant = :participantId')
+            ->andWhere('d.active = true')
+            ->setParameter('participantId', $user->getId())
+            ->setMaxResults(1)
+            ;
+
+        return $builder->getQuery()->getOneOrNullResult();
+    }
+
     // /**
     //  * @return Day[] Returns an array of Day objects
     //  */
