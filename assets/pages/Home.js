@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Paper } from "@mui/material";
+import {Fab, Paper} from "@mui/material";
 import DayCounter from "../components/DayCounter";
 import Grid from "@mui/material/Grid";
 import Timer from "../components/Timer";
 import Dashboard from "../components/Dashboard";
 import { useAuth } from "../utils/use-auth";
 import axios from "axios";
+import EditIcon from '@mui/icons-material/Edit';
 
 export default function Home() {
   const auth = useAuth();
@@ -54,6 +55,9 @@ export default function Home() {
 
       <Grid item xs={12} md={3} order={{ xs: 3, md: 3 }}>
         {time && <Timer expiryTimestamp={time} />}
+        <Fab color="secondary" aria-label="edit">
+          <EditIcon />
+        </Fab>
       </Grid>
     </Grid>
   );

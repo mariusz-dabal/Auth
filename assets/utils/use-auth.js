@@ -18,7 +18,7 @@ export const useAuth = () => {
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
-  const [token, setToken] = useState(null);
+  let [token, setToken] = useState(null);
 
   // Wrap any methods we want to use making sure ...
   // ... to save the user to state.
@@ -29,8 +29,9 @@ function useProvideAuth() {
         password: password,
       })
       .then((response) => {
-        localStorage.setItem("token", JSON.stringify(response.data.token));
+        localStorage.setItem("token", response.data.token);
         setToken(response.data.token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
         return response.data.token;
       })
       .catch((error) => {
@@ -48,13 +49,14 @@ function useProvideAuth() {
   // ... component that utilizes this hook to re-render with the ...
   // ... latest auth object.
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    token = token ? token : localStorage.getItem("token");
 
     if (token) {
       setToken(token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     } else {
       setToken("");
+      axios.defaults.headers.common['Authorization'] = `Bearer `;
     }
   }, []);
 

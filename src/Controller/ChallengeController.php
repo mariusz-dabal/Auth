@@ -44,7 +44,7 @@ class ChallengeController extends AbstractController
                     $daysDone++;
                 }
 
-                if ($today->setTime(0,0,0) == $day->getCreatedAt()->setTime(0,0,0)) {
+                if ($day->getActive()) {
                     $repsToday = $day->getReps();
                 }
 

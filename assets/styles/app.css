@@ -22,3 +22,8 @@
     height: 2rem !important;
 }
 
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
