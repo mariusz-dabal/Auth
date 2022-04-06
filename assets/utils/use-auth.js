@@ -39,6 +39,23 @@ function useProvideAuth() {
       });
   };
 
+  const signup = (name, challenge, email, password) => {
+    return axios
+      .post("/api/register", {
+        name: name,
+        challenge: challenge,
+        email: email,
+        password: password,
+      })
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   const signout = () => {
     setToken("");
     localStorage.removeItem("token");
@@ -63,6 +80,7 @@ function useProvideAuth() {
   // Return the user object and auth methods
   return {
     token,
+    signup,
     signin,
     signout,
   };

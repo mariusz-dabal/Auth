@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\ChallengeRepository;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,11 +19,42 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
-    private EmailVerifier $emailVerifier;
+    public function __construct(
+        private EmailVerifier $emailVerifier,
+        private ChallengeRepository $challengeRepository
+    )
+    {}
 
-    public function __construct(EmailVerifier $emailVerifier)
+    #[Route('/api/register', methods: 'POST')]
+    public function apiRegister(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
-        $this->emailVerifier = $emailVerifier;
+        $data = json_decode($request->getContent(), true);
+
+        if (isset($data['password'])
+            && isset($data['name'])
+            && isset($data['email'])
+            && isset($data['challenge'])) {
+            $user = new User();
+
+            $challenge = $this->challengeRepository->find($data['challenge']);
+
+            $user->setChallenge($challenge);
+            $user->setName($data['name']);
+            $user->setEmail($data['email']);
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $data['password']
+                )
+            );
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->json('User saved');
+        }
+
+        return $this->json('Something missing!', Response::HTTP_BAD_REQUEST);
     }
 
     #[Route('/register', name: 'register')]

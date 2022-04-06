@@ -19,7 +19,12 @@ export default function Profile() {
         setDay(response.data);
       })
       .catch((error) => {
-        navigate("/login");
+        console.log(error.response.data)
+        if (error.response.data === "No active day") {
+          return; //maybe disable input or put some info up
+        } else {
+          navigate("/login");
+        }
       });
   };
 
