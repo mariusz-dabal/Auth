@@ -39,11 +39,11 @@ export default function Home() {
   return (
     <>
       <Grid container spacing={1}>
-        <Grid item xs={12} md={3} order={{ xs: 2, md: 1 }}>
+        <Grid item xs={12} lg={3} order={{ xs: 2, lg: 1 }}>
           {challenge && <DayCounter day={challenge.day} />}
         </Grid>
 
-        <Grid item xs={12} md={6} order={{ xs: 1, md: 2 }}>
+        <Grid item xs={12} lg={6} order={{ xs: 1, lg: 2 }}>
           <Paper elevation={5} className="title-paper">
             <h1 className="title">
               30 days <br />
@@ -55,7 +55,7 @@ export default function Home() {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} md={3} order={{ xs: 3, md: 3 }}>
+        <Grid item xs={12} lg={3} order={{ xs: 3, lg: 3 }}>
           {time && <Timer expiryTimestamp={time} />}
         </Grid>
       </Grid>

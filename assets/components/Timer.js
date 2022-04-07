@@ -18,14 +18,18 @@ export default function Timer({ expiryTimestamp }) {
     onExpire: () => console.warn("onExpire called"),
   });
 
+  const formatTime = (time) => {
+    return String(time).padStart(2, '0')
+  }
+
   return (
     <Paper elevation={5} className="title-paper" sx={{ paddingTop: "75%" }}>
       <h2 className="title">
-        {hours}
+        {formatTime(hours)}
         :
-        {minutes}
+        {formatTime(minutes)}
         :
-        {seconds}
+        {formatTime(seconds)}
       </h2>
     </Paper>
   );
