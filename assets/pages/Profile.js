@@ -32,7 +32,7 @@ export default function Profile() {
     if (!reps || (reps === "0")) {
       setRepsError({
         error: true,
-        helperText: "Give me some push-ups!",
+        helperText: "Gonna cry?!",
       });
       return
     }
