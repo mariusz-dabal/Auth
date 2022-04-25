@@ -6,12 +6,52 @@ import authHeader from "../utils/authHeader";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 
-export default function Profile() {
+  export default function Profile() {
   const navigate = useNavigate();
   const [day, setDay] = useState({ reps_today: 0, reps_total: 0 });
   const [reps, setReps] = useState("");
-  const [repsError, setRepsError] = useState({ error: false, helperText: "" });
+  const [repsError, setRepsError] = useState({ error: false, helperText: "" , disableButton: false});
 
+  var pushSmall = ['Baby Steps!',
+'Każdy ma zakwasy mordo, POMPUJ!',
+'Nie zgubiłeś może zera?', 
+"It's something I guess...", 
+"Slow and steady", 
+'Serio liczysz to że się potknąłeś?',
+'A Krzysztof już skończył...',
+"Watch out, we've got a badass over here..."];
+var pushMid = ['DOBRA POMPA!',
+'Push it baby, push it',
+'Nice pecs my man',
+'Good set big man', 
+'Oof, teraz serio widać różnicę',
+'LEVEL UP!',
+`+${reps} do zastraszania`,
+`+${reps} exp w przytulaniu`,
+'Ale z klaskaniem, prawda?',
+'Tak to się robi!',
+'Ale im pokazałeś!',
+'A reszta pewnie jeszcze pije kawkę zamiast pompować!',
+'Epic Bruh Moment!',
+'Nice COCK fam!',
+'Niedługo dupy się będą o ciebie bić, jeszcze tylko kilka pompek! Trust me DUDE!',
+"That's how it's done my man!",
+'EPIC WIN!',
+'Damn, każdy 5cio latek ci zazdrości!',
+'"Nieźle pedale! / że pompka, wiesz, rower, pedał... blisko nie? nie?! Dobra to tego nie dawaj Mariusz"'];
+var pushBig = ['Napewno dobrze policzyłeś?',
+'Just... why?',
+'Na co taki zły jesteś?',
+'Wszystko dobrze w domu?',
+'To maraton nie sprint, ale lubię twój entuzjazm',
+'Coooo, zapomniało się o pompeczkach?',
+'A mama mówiła, nie rób wszystkiego na ostatnią chwilę',
+'CZUJESZ TEN POWER?!',
+'Ktoś tu chce mieć zakwasy jutro'];
+
+  function random(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+  }
   const getDay = () => {
     axios
       .get("api/me/day", { headers: authHeader() })
@@ -32,7 +72,7 @@ export default function Profile() {
     if (!reps || (reps === "0")) {
       setRepsError({
         error: true,
-        helperText: "Gonna cry?!",
+        helperText: "Give me some pushups!",
       });
       return
     }
@@ -48,6 +88,31 @@ export default function Profile() {
       .catch((error) => {
         console.log(error);
       });
+
+      if (reps > 0 && reps <= 10) {
+        setRepsError({
+          error: false,
+          helperText: `${pushSmall[random(0,7)]}`,
+        });
+      }
+      else if (reps > 11 && reps <= 30) {
+        setRepsError({
+          error: false,
+          helperText: `${pushMid[random(0,18)]}`,
+        });
+      }
+      else if (reps > 30 && reps <= 99) {
+        setRepsError({
+          error: false,
+          helperText: `${pushBig[random(0,8)]}`,
+        });
+      }
+      else if ( reps === "100") {
+        setRepsError({
+          error: false,
+          helperText: "Napisz apkę mówili, będziemy wpisywać w trakcie dnia a nie wszystkie na raz",
+        });
+      }
   };
 
   useEffect(() => {
@@ -60,13 +125,14 @@ export default function Profile() {
       setRepsError({
         error: true,
         helperText: "Easy there cowboy! That's enough.",
+        disableButton: true,
       });
-    } else {
-      setRepsError({
-        error: false,
-        helperText: "",
-      });
-    }
+    } else {setRepsError({
+      error: false,
+      disableButton: false,
+    });
+  }
+
   };
 
   return (
@@ -91,7 +157,7 @@ export default function Profile() {
           helperText={repsError.helperText}
         />
         <ListItem sx={{ paddingLeft: "0" }}>
-          <Button variant="contained" size="large" onClick={patchDay}>
+          <Button variant="contained" size="large" onClick={patchDay} disabled={repsError.disableButton}>
             Submit
           </Button>
         </ListItem>
