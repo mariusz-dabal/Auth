@@ -12,7 +12,8 @@ import Button from "@mui/material/Button";
   const [reps, setReps] = useState("");
   const [repsError, setRepsError] = useState({ error: false, helperText: "" , disableButton: false});
 
-  var pushSmall = ['Baby Steps!',
+var pushSmall = [
+'Baby Steps!',
 'Każdy ma zakwasy mordo, POMPUJ!',
 'Nie zgubiłeś może zera?', 
 "It's something I guess...", 
@@ -20,7 +21,9 @@ import Button from "@mui/material/Button";
 'Serio liczysz to że się potknąłeś?',
 'A Krzysztof już skończył...',
 "Watch out, we've got a badass over here..."];
-var pushMid = ['DOBRA POMPA!',
+
+var pushMid = [
+'DOBRA POMPA!',
 'Push it baby, push it',
 'Nice pecs my man',
 'Good set big man', 
@@ -39,7 +42,9 @@ var pushMid = ['DOBRA POMPA!',
 'EPIC WIN!',
 'Damn, każdy 5cio latek ci zazdrości!',
 '"Nieźle pedale! / że pompka, wiesz, rower, pedał... blisko nie? nie?! Dobra to tego nie dawaj Mariusz"'];
-var pushBig = ['Napewno dobrze policzyłeś?',
+
+var pushBig = [
+'Napewno dobrze policzyłeś?',
 'Just... why?',
 'Na co taki zły jesteś?',
 'Wszystko dobrze w domu?',
@@ -92,19 +97,19 @@ var pushBig = ['Napewno dobrze policzyłeś?',
       if (reps > 0 && reps <= 10) {
         setRepsError({
           error: false,
-          helperText: `${pushSmall[random(0,7)]}`,
+          helperText: `${pushSmall[random(0,pushSmall.length-1)]}`,
         });
       }
       else if (reps > 11 && reps <= 30) {
         setRepsError({
           error: false,
-          helperText: `${pushMid[random(0,18)]}`,
+          helperText: `${pushMid[random(0,pushMid.length-1)]}`,
         });
       }
       else if (reps > 30 && reps <= 99) {
         setRepsError({
           error: false,
-          helperText: `${pushBig[random(0,8)]}`,
+          helperText: `${pushBig[random(0,pushBig.length-1)]}`,
         });
       }
       else if ( reps === "100") {
